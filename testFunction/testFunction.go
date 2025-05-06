@@ -1,180 +1,173 @@
 package testFunction
 
 import (
+	"errors"
 	"math"
 	"math/rand"
 	"sort"
-	"strconv"
 	"time"
 )
 
 var (
-	errWrongParamType = "输入参数类型错误"
-	errWrongParamNum  = "输入参数数量错误"
-	errWrongParamZero = "输入参数不能为0"
+	errWrongParamType = "Invalid parameter type"
+	errWrongParamNum  = "Invalid number of parameters"
+	errWrongParamZero = "Parameter cannot be zero"
 )
 
-func Add(inArgs ...interface{}) ([]string, string) {
-	var ret float64
+func Add(inArgs ...any) ([]any, error) {
+	var res float64
 	if len(inArgs) < 2 {
-		return []string{""}, errWrongParamNum
+		return []any{}, errors.New(errWrongParamNum)
 	}
 	for i, v := range inArgs {
-		parseFloat, err := strconv.ParseFloat(v.(string), 64)
-		if err != nil {
-			return []string{""}, errWrongParamType
+		val, ok := v.(float64)
+		if !ok {
+			return []any{}, errors.New(errWrongParamType)
 		}
 		if i == 0 {
-			ret = parseFloat
+			res = val
 		} else {
-			ret += parseFloat
+			res += val
 		}
 	}
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
+	return []any{res}, nil
 }
 
-func Subtract(inArgs ...interface{}) ([]string, string) {
-	var ret float64
+func Subtract(inArgs ...any) ([]any, error) {
+	var res float64
 	if len(inArgs) < 2 {
-		return []string{""}, errWrongParamNum
+		return []any{}, errors.New(errWrongParamNum)
 	}
 	for i, v := range inArgs {
-		parseFloat, err := strconv.ParseFloat(v.(string), 64)
-		if err != nil {
-			return []string{""}, errWrongParamType
+		val, ok := v.(float64)
+		if !ok {
+			return []any{}, errors.New(errWrongParamType)
 		}
 		if i == 0 {
-			ret = parseFloat
+			res = val
 		} else {
-			ret -= parseFloat
+			res -= val
 		}
 	}
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
+	return []any{res}, nil
 }
 
-func Multiply(inArgs ...interface{}) ([]string, string) {
-	var ret float64
+func Multiply(inArgs ...any) ([]any, error) {
+	var res float64 = 1
 	if len(inArgs) < 2 {
-		return []string{""}, errWrongParamNum
-	}
-	for i, v := range inArgs {
-		parseFloat, err := strconv.ParseFloat(v.(string), 64)
-		if err != nil {
-			return []string{""}, errWrongParamType
-		}
-		if i == 0 {
-			ret = parseFloat
-		} else {
-			ret *= parseFloat
-		}
-	}
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
-}
-
-func Divide(inArgs ...interface{}) ([]string, string) {
-	var ret float64
-	if len(inArgs) < 2 {
-		return []string{""}, errWrongParamNum
-	}
-	for i, v := range inArgs {
-		parseFloat, err := strconv.ParseFloat(v.(string), 64)
-		if err != nil {
-			return []string{""}, errWrongParamType
-		}
-		if i == 0 {
-			ret = parseFloat
-		} else {
-			if parseFloat == 0 {
-				return []string{""}, "除数" + errWrongParamZero
-			}
-			ret /= parseFloat
-		}
-	}
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
-}
-
-func Pow(inArgs ...interface{}) ([]string, string) {
-	var ret float64
-	if len(inArgs) != 2 {
-		return []string{""}, errWrongParamNum
-	}
-	parseFloatX, err1 := strconv.ParseFloat(inArgs[0].(string), 64)
-	parseFloatY, err2 := strconv.ParseFloat(inArgs[1].(string), 64)
-	if err1 != nil || err2 != nil {
-		return []string{""}, errWrongParamType
-	}
-	if parseFloatX == 0 {
-		return []string{""}, "底数" + errWrongParamZero
-	}
-	ret = math.Pow(parseFloatX, parseFloatY)
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
-}
-
-func Sqrt(inArgs ...interface{}) ([]string, string) {
-	var ret float64
-	if len(inArgs) != 1 {
-		return []string{""}, errWrongParamNum
-	}
-	parseFloat, err := strconv.ParseFloat(inArgs[0].(string), 64)
-	if err != nil {
-		return []string{""}, errWrongParamType
-	}
-	ret = math.Pow(parseFloat, 0.5)
-	return []string{strconv.FormatFloat(ret, 'f', -1, 64)}, ""
-}
-
-func Random(inArgs ...interface{}) ([]string, string) {
-	var ret int
-	if len(inArgs) != 0 {
-		return []string{""}, errWrongParamNum
-	}
-	rand.Seed(time.Now().Unix())
-	ret = rand.Int()
-	return []string{strconv.Itoa(ret)}, ""
-}
-
-func Swap(inArgs ...interface{}) ([]string, string) {
-	if len(inArgs) != 2 {
-		return []string{"", ""}, errWrongParamNum
-	}
-	return []string{inArgs[1].(string), inArgs[0].(string)}, ""
-}
-
-func Sort(inArgs ...interface{}) ([]string, string) {
-	ret := make([]float64, 0, len(inArgs))
-	if len(inArgs) == 0 {
-		return []string{""}, errWrongParamNum
+		return []any{}, errors.New(errWrongParamNum)
 	}
 	for _, v := range inArgs {
-		parseFloat, err := strconv.ParseFloat(v.(string), 64)
-		if err != nil {
-			return []string{""}, errWrongParamType
+		val, ok := v.(float64)
+		if !ok {
+			return []any{}, errors.New(errWrongParamType)
 		}
-		ret = append(ret, parseFloat)
+		res *= val
+	}
+	return []any{res}, nil
+}
+
+func Divide(inArgs ...any) ([]any, error) {
+	var res float64
+	if len(inArgs) < 2 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	for i, v := range inArgs {
+		val, ok := v.(float64)
+		if !ok {
+			return []any{}, errors.New(errWrongParamType)
+		}
+		if i == 0 {
+			res = val
+		} else {
+			if val == 0 {
+				return []any{}, errors.New("divisor: " + errWrongParamZero)
+			}
+			res /= val
+		}
+	}
+	return []any{res}, nil
+}
+
+func Pow(inArgs ...any) ([]any, error) {
+	if len(inArgs) != 2 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	base, ok1 := inArgs[0].(float64)
+	exp, ok2 := inArgs[1].(float64)
+	if !ok1 || !ok2 {
+		return []any{}, errors.New(errWrongParamType)
+	}
+	if base == 0 {
+		return []any{}, errors.New("base: " + errWrongParamZero)
+	}
+	res := math.Pow(base, exp)
+	return []any{res}, nil
+}
+
+func Sqrt(inArgs ...any) ([]any, error) {
+	if len(inArgs) != 1 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	val, ok := inArgs[0].(float64)
+	if !ok {
+		return []any{}, errors.New(errWrongParamType)
+	}
+	res := math.Sqrt(val)
+	return []any{res}, nil
+}
+
+func Random(inArgs ...any) ([]any, error) {
+	if len(inArgs) != 0 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	rand.Seed(time.Now().Unix())
+	res := rand.Float64()
+	return []any{res}, nil
+}
+
+func Swap(inArgs ...any) ([]any, error) {
+	if len(inArgs) != 2 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	return []any{inArgs[1], inArgs[0]}, nil
+}
+
+func Sort(inArgs ...any) ([]any, error) {
+	if len(inArgs) == 0 {
+		return []any{}, errors.New(errWrongParamNum)
+	}
+	ret := make([]float64, 0, len(inArgs))
+	for _, v := range inArgs {
+		val, ok := v.(float64)
+		if !ok {
+			return []any{}, errors.New(errWrongParamType)
+		}
+		ret = append(ret, val)
 	}
 	sort.Float64s(ret)
-	sorted := make([]string, 0, len(ret))
-	for _, v := range ret {
-		sorted = append(sorted, strconv.FormatFloat(v, 'f', -1, 64))
+	res := make([]any, len(ret))
+	for i, v := range ret {
+		res[i] = v
 	}
-	return sorted, ""
+	return res, nil
 }
 
-func Sleep(inArgs ...interface{}) ([]string, string) {
+func Sleep(inArgs ...any) ([]any, error) {
 	if len(inArgs) != 1 {
-		return []string{""}, errWrongParamNum
+		return []any{}, errors.New(errWrongParamNum)
 	}
-	parseFloat, err := strconv.ParseFloat(inArgs[0].(string), 64)
-	if err != nil {
-		return []string{""}, errWrongParamType
+	val, ok := inArgs[0].(float64)
+	if !ok {
+		return []any{}, errors.New(errWrongParamType)
 	}
-	time.Sleep(time.Duration(parseFloat) * time.Second)
-	return []string{"睡眠完成"}, ""
+	time.Sleep(time.Duration(val) * time.Second)
+	return []any{"sleep done"}, nil
 }
 
-func HeartCheck(inArgs ...interface{}) ([]string, string) {
+func HeartCheck(inArgs ...any) ([]any, error) {
 	if len(inArgs) != 0 {
-		return []string{""}, errWrongParamNum
+		return []any{}, errors.New(errWrongParamNum)
 	}
-	return []string{"0"}, ""
+	return []any{0}, nil
 }

@@ -10,11 +10,11 @@ import (
 func main() {
 	args := os.Args
 
-	// 服务注册
 	server, err := server.NewServer(args)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	server.Register("add", testFunction.Add)
 	server.Register("subtract", testFunction.Subtract)
 	server.Register("multiply", testFunction.Multiply)
@@ -26,9 +26,8 @@ func main() {
 	server.Register("sort", testFunction.Sort)
 	server.Register("sleep", testFunction.Sleep)
 
-	// 服务，启动！
 	err = server.ListenAndServe(server.GetAddress())
 	if err != nil {
-		log.Fatalln("服务器运行时发生错误")
+		log.Fatalln("Server encountered an error while running:", err)
 	}
 }
